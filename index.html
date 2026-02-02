@@ -893,7 +893,7 @@
             celebrationCats.forEach(cat => {
                 // Initialize ground position if not set
                 if (!cat.groundY) cat.groundY = groundY;
-                
+
                 // Responsive movement speed
                 if (!cat.speedSet) {
                     cat.vx = (Math.random() - 0.5) * moveSpeed * 2;
@@ -902,7 +902,7 @@
                     }
                     cat.speedSet = true;
                 }
-                
+
                 // Movement
                 cat.x += cat.vx;
 
@@ -923,14 +923,14 @@
                 if (cat.jumping) {
                     cat.vy += gravity;
                     cat.y += cat.vy;
-                    
+
                     // Jump sprite animation (cycle through jump frames)
                     cat.jumpFrameTimer = (cat.jumpFrameTimer || 0) + 1;
                     if (cat.jumpFrameTimer >= 6) {
                         cat.jumpFrameTimer = 0;
                         cat.jumpFrame = Math.min((cat.jumpFrame || 0) + 1, 6);
                     }
-                    
+
                     if (cat.y >= groundY) {
                         cat.y = groundY;
                         cat.jumping = false;
@@ -940,7 +940,7 @@
                     }
                 } else {
                     cat.y = groundY;
-                    
+
                     // Idle/run animation
                     cat.frameTimer++;
                     if (cat.frameTimer >= 8) {
@@ -957,7 +957,7 @@
                 // Draw cat sprite using canvas
                 const sprite = cat.jumping ? cat.sprites.jump : cat.sprites.idle;
                 const currentFrame = cat.jumping ? (cat.jumpFrame || 0) : cat.frame;
-                
+
                 if (sprite.complete && sprite.naturalWidth > 0) {
                     const frameWidth = sprite.width / 7;
                     const frameHeight = sprite.height;

@@ -324,12 +324,42 @@ h1{
 ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#ff8cb4,#d66eff)}
 
 /* responsive */
-@media(max-width:600px){
-  .hero{gap:16px}
-  .cake-frame img{max-width:min(180px,35vw)}
+@media(max-width:768px){
+  .hero{gap:20px}
+  .cake-frame img{max-width:min(200px,38vw)}
+  #aceCanvas{width:160px;height:160px}
+  .ace-hero-label{font-size:clamp(8px,2vw,11px)}
+  .cat-sprite{width:80px;height:80px}
+  .cat-scene{gap:10px}
+  .overlay{padding:16px}
+}
+@media(max-width:540px){
+  .hero{flex-direction:column;align-items:center;gap:12px}
+  .cake-frame img{max-width:min(180px,55vw)}
   #aceCanvas{width:128px;height:128px}
+  .ace-hero-glint{top:-10px;right:-10px;font-size:14px}
   .cat-sprite{width:64px;height:64px}
+  .cat-scene{gap:8px}
+  .cat-stage-title{font-size:7px}
+  .cat-sprite .cat-label{font-size:4px;bottom:-14px}
+  .ace-btn{font-size:5px;padding:3px 6px}
+  .subtitle{font-size:7px}
   .overlay{padding:10px}
+  .music-btn{top:10px;right:10px;font-size:8px;padding:6px 10px}
+  .balloon{width:18px !important;height:24px !important}
+}
+@media(max-width:380px){
+  h1{font-size:14px}
+  .cake-frame img{max-width:min(140px,50vw)}
+  #aceCanvas{width:96px;height:96px}
+  .cake-frame{padding:6px}
+  .ace-hero-label{font-size:7px}
+  .cat-sprite{width:48px;height:48px}
+  .cat-scene{gap:6px}
+  .cat-stage{padding:12px 8px}
+  .overlay{padding:8px}
+  .ace-hero-controls{gap:4px}
+  .star{display:none}
 }
 </style>
 </head>
@@ -513,34 +543,41 @@ document.getElementById('toggleAceAnim').addEventListener('click', function() {
   }
 });
 
+aceCanvas.addEventListener('click', function() {
+  document.getElementById('toggleAceAnim').click();
+});
+
 preloadAceFrames(function() {
   drawAceFrame();
   startAceAnim();
 });
 
-// floating balloons & stars
+// floating balloons & stars - fewer on mobile
+const isMobile = window.innerWidth < 540;
 const decor = document.getElementById('floatingDecor');
 const balloonColors = ['#ff0066','#ffcc00','#00ccff','#66ff66','#ff66cc','#ff8800'];
-for (let i = 0; i < 12; i++) {
+const balloonCount = isMobile ? 6 : 12;
+for (let i = 0; i < balloonCount; i++) {
   const b = document.createElement('div');
   b.className = 'balloon floating';
   b.style.setProperty('--c', balloonColors[i % balloonColors.length]);
   b.style.left = Math.random() * 90 + '%';
-  b.style.animationDuration = (10 + Math.random() * 15) + 's';
+  b.style.animationDuration = (12 + Math.random() * 15) + 's';
   b.style.animationDelay = -(Math.random() * 20) + 's';
-  b.style.width = (24 + Math.random() * 20) + 'px';
-  b.style.height = (30 + Math.random() * 25) + 'px';
+  b.style.width = (isMobile ? 18 : 24 + Math.random() * 20) + 'px';
+  b.style.height = (isMobile ? 24 : 30 + Math.random() * 25) + 'px';
   decor.appendChild(b);
 }
 
-for (let i = 0; i < 20; i++) {
+const starCount = isMobile ? 8 : 20;
+for (let i = 0; i < starCount; i++) {
   const s = document.createElement('div');
   s.className = 'star floating';
   s.style.left = Math.random() * 95 + '%';
   s.style.top = Math.random() * 90 + '%';
   s.style.setProperty('--d', (1.5 + Math.random() * 2) + 's');
   s.style.animationDelay = -(Math.random() * 3) + 's';
-  s.style.width = s.style.height = (6 + Math.random() * 8) + 'px';
+  s.style.width = s.style.height = (isMobile ? 4 : 6 + Math.random() * 8) + 'px';
   decor.appendChild(s);
 }
 
@@ -607,16 +644,19 @@ function updateConfetti() {
 updateConfetti();
 
 document.addEventListener('click', function(e) {
-  spawnConfettiBurst(30, e.clientX, e.clientY);
+  const burstCount = isMobile ? 15 : 30;
+  spawnConfettiBurst(burstCount, e.clientX, e.clientY);
 });
 
-// initial burst on load
+// initial burst on load (smaller on mobile)
 window.addEventListener('load', function() {
   setTimeout(function() {
-    spawnConfettiBurst(60, W/2, H/3);
+    const b1 = isMobile ? 25 : 60;
+    spawnConfettiBurst(b1, W/2, H/3);
     setTimeout(function() {
-      spawnConfettiBurst(40, W*0.3, H*0.4);
-      spawnConfettiBurst(40, W*0.7, H*0.4);
+      const b2 = isMobile ? 15 : 40;
+      spawnConfettiBurst(b2, W*0.3, H*0.4);
+      spawnConfettiBurst(b2, W*0.7, H*0.4);
     }, 400);
   }, 500);
 });
